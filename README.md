@@ -466,7 +466,7 @@ Just a reminder of how to setup an environment for the development:
 > pip install poetry
 > poetry install
 > pre-commit install
-> pytest
+> poetry run pytest
 ```
 
 Use:
