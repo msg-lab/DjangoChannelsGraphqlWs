@@ -134,9 +134,10 @@ async def test_heavy_load(gql, sync_resolvers, requests_number):
     await asyncio.wait(send_waitlist)
     responses, _ = await asyncio.wait(receive_waitlist)
     finish_ts = time.monotonic()
+    delta_ts = finish_ts - start_ts
     print(
-        f"RPS: {requests_number / (finish_ts-start_ts)}"
-        f" ({requests_number}[req]/{round(finish_ts-start_ts,2)}[sec])"
+        f"RPS: {requests_number / delta_ts if delta_ts != 0 else float('inf')}"
+        f" ({requests_number}[req]/{round(delta_ts, 2)}[sec])"
     )
 
     for response in (r.result() for r in responses):
