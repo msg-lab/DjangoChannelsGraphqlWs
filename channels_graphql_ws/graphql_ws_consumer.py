@@ -833,8 +833,9 @@ class GraphqlWsConsumer(ch_websocket.AsyncJsonWebsocketConsumer):
             # reference to the original error raised from a resolver.
             tb = ex.__traceback__
             if isinstance(ex, graphql.error.located_error.GraphQLLocatedError):
-                tb = ex.stack
-                ex = ex.original_error
+                if ex.original_error is not None:
+                    tb = ex.stack
+                    ex = ex.original_error
             LOG.error(
                 "GraphQL resolver failed on operation with id=%s:\n%s",
                 operation_id,

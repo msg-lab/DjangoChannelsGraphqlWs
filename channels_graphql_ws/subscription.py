@@ -455,7 +455,7 @@ class Subscription(graphene.ObjectType):
         """
         try:
             frame = inspect.currentframe()
-            if frame is None:
+            if frame is None or frame.f_back is None or frame.f_back.f_back is None:
                 return False
             # pylint: disable=no-member
             coroutine_function_flags = (
