@@ -711,15 +711,23 @@ class GraphqlWsConsumer(ch_websocket.AsyncJsonWebsocketConsumer):
             # Assert we run in a proper thread.
             self._assert_thread()
             while True:
-                payload = await notification_queue.get()
+                serialized_payload = await notification_queue.get()
+
                 # Run a subscription's `publish` method (invoked by the
                 # `trigger.on_next` function) within the threadpool used
                 # for processing other GraphQL resolver functions.
-                # NOTE: `lambda` is important to run the deserialization
+                # NOTE: it is important to run the deserialization
                 # in the worker thread as well.
-                await self._run_in_worker(
-                    lambda: trigger.on_next(Serializer.deserialize(payload))
-                )
+                def workload():
+                    try:
+                        payload = Serializer.deserialize(serialized_payload)
+                    except Exception as ex:
+                        trigger.on_error(f"Cannot deserialize payload. {ex}")
+                    else:
+                        trigger.on_next(payload)
+
+                await self._run_in_worker(workload)
+
                 # Message processed. This allows `Queue.join` to work.
                 notification_queue.task_done()
 
