@@ -22,6 +22,7 @@
 
 # Settings. Selected files can be added manually if necessary.
 **/.vscode
+**/.idea
 
 # Python related.
 **/__pycache__
