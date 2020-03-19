@@ -815,7 +815,7 @@ class GraphqlWsConsumer(ch_websocket.AsyncJsonWebsocketConsumer):
         )
 
     async def _send_gql_data(
-        self, operation_id, data: dict, errors: Optional[Sequence[Exception]]
+        self, operation_id, data: Optional[dict], errors: Optional[Sequence[Exception]]
     ):
         """Send GraphQL `data` message to the client.
 
