@@ -27,10 +27,8 @@
 # Python related.
 **/__pycache__
 **/.cache
-**/.cache
 **/.coverage
 **/.egg-info
-**/.eggs
 **/.eggs
 **/.mypy_cache
 **/.pytest_cache
