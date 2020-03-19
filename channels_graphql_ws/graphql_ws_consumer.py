@@ -286,7 +286,7 @@ class GraphqlWsConsumer(ch_websocket.AsyncJsonWebsocketConsumer):
         self._sids_by_group.clear()
         self._background_tasks.clear()
 
-    async def receive_json(self, content):  # pylint: disable=arguments-differ
+    async def receive_json(self, content, **kwargs):
         """Process WebSocket message received from the client.
 
         NOTE: We force 'STOP' message processing to wait until 'START'
