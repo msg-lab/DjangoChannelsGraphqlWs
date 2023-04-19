@@ -20,7 +20,7 @@ class OperationContext(ScopeAsContext):
     def __init__(self, scope: dict):
         """Nothing interesting here."""
         super().__init__(scope)
-        self._operation_context: dict = {}
+        self._operation_context = ScopeAsContext(scope={})
 
     @property
     def scope(self) -> dict:
@@ -28,6 +28,6 @@ class OperationContext(ScopeAsContext):
         return self._scope
 
     @property
-    def operation_context(self) -> dict:
+    def operation_context(self) -> ScopeAsContext:
         """Return the per-operation context."""
         return self._operation_context
