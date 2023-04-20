@@ -40,6 +40,7 @@ NOTE: Links based on which this functionality is implemented:
 
 import asyncio
 import concurrent
+import copy
 import dataclasses
 import functools
 import logging
@@ -612,7 +613,7 @@ class GraphqlWsConsumer(ch_websocket.AsyncJsonWebsocketConsumer):
                     request_string=query,
                     operation_name=op_name,
                     variables=variables,
-                    context=context,
+                    context=copy.deepcopy(context),
                     # NOTE: Wrap with `wrap_in_promise=False`, otherwise
                     # it raises `GraphQLError` with message:
                     # "Subscription must return Async Iterable or
