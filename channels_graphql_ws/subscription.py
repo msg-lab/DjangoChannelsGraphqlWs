@@ -382,6 +382,7 @@ class Subscription(graphene.ObjectType):
         # Extract function which associates the callback with the groups
         # and bring real root back.
         register_subscription = root.register_subscription
+        operation_id = root.operation_id
         root = root.real_root
 
         # Attach current subscription to the group corresponding to the
@@ -393,7 +394,9 @@ class Subscription(graphene.ObjectType):
         # Invoke the subclass-specified `subscribe` method to get the
         # groups subscription must be attached to.
         if cls._meta.subscribe is not None:
-            subclass_groups = cls._meta.subscribe(root, info, *args, **kwds)
+            subclass_groups = cls._meta.subscribe(
+                root, info, *args, **kwds, operation_id=operation_id
+            )
             # Properly handle `async def subscribe`.
             if asyncio.iscoroutinefunction(cls._meta.subscribe):
                 subclass_groups = asyncio.get_event_loop().run_until_complete(
@@ -417,7 +420,9 @@ class Subscription(graphene.ObjectType):
         # the subscription "resolver" functions.
         def publish_callback(payload):
             """Call `publish` with the payload."""
-            result = cls._meta.publish(payload, info, *args, **kwds)
+            result = cls._meta.publish(
+                payload, info, *args, **kwds, operation_id=operation_id
+            )
             # Properly handle `async def publish`.
             if asyncio.iscoroutinefunction(cls._meta.publish):
                 result = asyncio.get_event_loop().run_until_complete(result)
@@ -427,7 +432,9 @@ class Subscription(graphene.ObjectType):
             """Call `unsubscribed` notification."""
             if cls._meta.unsubscribed is None:
                 return None
-            result = cls._meta.unsubscribed(None, info, *args, **kwds)
+            result = cls._meta.unsubscribed(
+                None, info, *args, **kwds, operation_id=operation_id
+            )
             # Properly handle `async def unsubscribed`.
             if asyncio.iscoroutinefunction(cls._meta.unsubscribed):
                 result = asyncio.get_event_loop().run_until_complete(result)

@@ -592,7 +592,9 @@ class GraphqlWsConsumer(ch_websocket.AsyncJsonWebsocketConsumer):
                     is Subscription._subscribe.__func__
                 ):
                     root = types.SimpleNamespace(
-                        real_root=root, register_subscription=register_subscription
+                        real_root=root,
+                        register_subscription=register_subscription,
+                        operation_id=operation_id,
                     )
                 return next_middleware(root, info, *args, **kwds)
 
