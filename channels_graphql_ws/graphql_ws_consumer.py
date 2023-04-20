@@ -594,7 +594,8 @@ class GraphqlWsConsumer(ch_websocket.AsyncJsonWebsocketConsumer):
                     root = types.SimpleNamespace(
                         real_root=root, register_subscription=register_subscription
                     )
-                return next_middleware(root, copy.deepcopy(info), *args, **kwds)
+                    info.context = copy.deepcopy(info.context)
+                return next_middleware(root, info, *args, **kwds)
 
             # Process the request with Graphene/GraphQL.
 
