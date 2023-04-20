@@ -594,7 +594,7 @@ class GraphqlWsConsumer(ch_websocket.AsyncJsonWebsocketConsumer):
                     root = types.SimpleNamespace(
                         real_root=root, register_subscription=register_subscription
                     )
-                return next_middleware(root, info, *args, **kwds)
+                return next_middleware(root, copy.deepcopy(info), *args, **kwds)
 
             # Process the request with Graphene/GraphQL.
 
@@ -613,7 +613,7 @@ class GraphqlWsConsumer(ch_websocket.AsyncJsonWebsocketConsumer):
                     request_string=query,
                     operation_name=op_name,
                     variables=variables,
-                    context=copy.deepcopy(context),
+                    context=context,
                     # NOTE: Wrap with `wrap_in_promise=False`, otherwise
                     # it raises `GraphQLError` with message:
                     # "Subscription must return Async Iterable or
